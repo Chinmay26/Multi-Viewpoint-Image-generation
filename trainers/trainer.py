@@ -18,13 +18,13 @@ class Trainer(object):
 	""" Construct the optimizer"""
 	def build_optimizer(self, loss, gstep=None, lrate=None):
 		gstep = self.global_step if gstep is None else gstep
-		#lrate = self.learning_rate if lrate is None else lrate
-		#self.opt = layers.optimize_loss(loss = loss, global_step=gstep, learning_rate=lrate, 
-		#		optimizer=tf.train.AdamOptimizer)
+		lrate = self.learning_rate if lrate is None else lrate
+		self.opt = layers.optimize_loss(loss = loss, global_step=gstep, learning_rate=lrate, 
+				optimizer=tf.train.AdamOptimizer)
 
-		lr = tf.train.exponential_decay(5e-4, gstep, 1000, 0.96, staircase=True)
-		optimizer = tf.train.AdamOptimizer(lr)
-		self.opt = optimizer.minimize(loss=loss)
+		#lr = tf.train.exponential_decay(5e-4, gstep, 1000, 0.96, staircase=True)
+		#optimizer = tf.train.AdamOptimizer(lr)
+		#self.opt = optimizer.minimize(loss=loss)
 
 	def setup_graph(self, model):
 		self.model = model
