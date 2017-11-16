@@ -5,6 +5,8 @@ import numpy as np
 from evaluators import plot
 from utils import helper
 
+log_dir = "/home/chinmay/CODE/deep_learning/599-project/repo/Multi-Viewpoint-Image-generation/log_dir"
+
 class Trainer(object):
 	def __init__(self, config, train, test):
 		self.batch_size = config.get('batch_size') if config.get('batch_size') else 32
@@ -14,6 +16,8 @@ class Trainer(object):
 		self.global_step = tf.train.get_or_create_global_step(graph=None)
 		self.train = train
 		self.test = test
+
+		
 
 	""" Construct the optimizer"""
 	def build_optimizer(self, loss, gstep=None, lrate=None):
@@ -32,6 +36,9 @@ class Trainer(object):
 		self.build_optimizer(self.loss)
 		self.session.run(tf.global_variables_initializer())
 
+		self.summary_op = tf.summary.merge_all()
+		self.summary_writer = tf.summary.FileWriter(log_dir, self.session.graph)
+
 	""" Train the network """
 	def train_model(self, is_train=True):
 		"""
@@ -44,7 +51,13 @@ class Trainer(object):
 		l = len(dataset)
 		print("Total iterations in epoch",int(l/self.batch_size))
 		for e in range(self.epochs):
+
+
+
 			for i in range(int(l/self.batch_size)):
+
+				
+
 			#for i in range(5):
 				batch_input = dataset[i*self.batch_size: (i+1)*self.batch_size]
 				#batch_target = np.roll(batch_input, 1, axis=1)
@@ -64,8 +77,11 @@ class Trainer(object):
 
 				feed_dict = {self.model.image: batch_input, self.model.target_image: batch_target}
 
-				computed_loss,computed_opt, gstep =  self.session.run([self.loss, self.opt, self.global_step], feed_dict=feed_dict)
+				computed_loss,computed_opt, gstep, summary =  self.session.run([self.loss, self.opt, self.global_step, self.summary_op], feed_dict=feed_dict)
 				print("Epoch: {}/{}...".format(e+1, self.epochs), "Training loss: {:.4f}".format(computed_loss))
+
+				if i % 10 == 0:
+					self.summary_writer.add_summary(summary, global_step=gstep)
 
 
 	def test_model(self):

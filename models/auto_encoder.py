@@ -22,7 +22,7 @@ class AutoEncoder(base_model.Model):
 			c3 = helper.conv2d(c2, 64, kernel_h=3, kernel_w=3, k_stride=2, scope_name='conv3')
 			return c3
 
-	def decoder(self, dinput, scope_name='encoder'):
+	def decoder(self, dinput, scope_name='decoder'):
 		with tf.variable_scope(scope_name):
 			d1 = helper.deconv2d(dinput, kernel_size=3, stride=2, num_filter=32, act=tf.nn.relu, scope_name='dconv1')
 			d2 = helper.deconv2d(d1, kernel_size=3, stride=2, num_filter=16, act=tf.nn.relu, scope_name='dconv2')
@@ -52,3 +52,4 @@ class AutoEncoder(base_model.Model):
 		self.loss = tf.reduce_mean(tf.abs(op1 - op2))
 		#self.loss = tf.reduce_mean(tf.abs(d - self.target_image))
 		self.output = output
+		tf.summary.scalar("loss/loss", self.loss)
