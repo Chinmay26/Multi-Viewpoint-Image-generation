@@ -68,13 +68,17 @@ def run(config_file):
 
 
 	result = helper.denormalization(result)
+	test = helper.denormalization(test)
 
-	im = [test[5][...,-1], result[0][5][...,-1]]
+	#im = [test[5][...,-1], result[0][5][...,-1]]
+	im = [test[5], result[0][5]]
 	#for i in range(3):
 	#	im.append(result[i][...,::-1])
 
 	#print(test[0][...,-1].shape, "TEST")
 	#print(result[0][...,-1].shape, "RESULT")
+	plot.plot(im)
+	im = [np.uint8(test[5]), np.uint8(result[0][5])]
 	plot.plot(im)
 	#print(result[0][0][...,::-1].shape)
 
