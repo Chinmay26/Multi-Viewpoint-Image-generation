@@ -1,1 +1,1 @@
-{"model": "encoder", "batch_size": 36,"trainer": {"learning_rate": 5e-4, "epochs": 10}, "model": {"height": 64, "width": 64, "channel": 3}}
+{"model": "encoder", "batch_size": 36,"trainer": {"learning_rate": 5e-4, "epochs": 4}, "model": {"height": 64, "width": 64, "channel": 3}}
