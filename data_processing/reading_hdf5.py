@@ -5,23 +5,28 @@ import numpy as np
 import h5py
 import os
 from scipy import misc
+import pickle
 
 class Shapenet(object):
     def __init__(self, folder_path):
         self.path = folder_path
 
-
+    
+#    def pickle_data(self,images):
+#        print("reading")
+#        with open('parrot.pkl', 'wb') as f:
+#            pickle.dump(images, f, 2)
+        
     def store_to_hdf5(self,images):
-        #del(images[0]) 
         n = len(images)
         f = h5py.File('data.hdf5','w')
         shape_dataset = np.array(images[0]).shape
         sh = (n,shape_dataset[0],shape_dataset[1],shape_dataset[2],3)
         dst = f.create_dataset("myimages", shape=sh,
                            dtype=np.uint8, compression='gzip')
-        
+        print(np.array(images[0]).shape)
         for each in range(n):
-            dst[each] = images[0]
+            dst[each] = np.array(images[each])
         print("Done storing")
         
     def read_from_hdf5(self,hdf5_path):
@@ -46,12 +51,12 @@ class Shapenet(object):
             for fname in files:
                 if fname.endswith('.png'):
                     fp = os.path.join(self.path, subdir, fname)
-                    img_data = misc.imread(fp).astype(np.float32)                    
+                    img_data = misc.imread(fp).astype(np.int32)                    
                     name,extension = os.path.splitext(fname)
                     fpart, elevation_angle = name.rsplit('_',1)
                     img_id, azimuth_angle = fpart.rsplit('_', 1)
                     
-                    if prev_azimuth_angle == int(azimuth_angle):
+                    if prev_azimuth_angle == int(azimuth_angle) or  prev_azimuth_angle==0:
                         pose_image_list.append(img_data)
                     elif prev_azimuth_angle != int(azimuth_angle) and pose_image_list:
                         images.append(pose_image_list)
@@ -76,6 +81,7 @@ if __name__=='__main__':
     
     s = Shapenet(dpath)
     trainData = s.get_dataset()
+#    s.pickle_data(trainData)
     s.store_to_hdf5(trainData)         
     
     '''
