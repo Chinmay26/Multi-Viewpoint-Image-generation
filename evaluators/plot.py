@@ -1,6 +1,7 @@
 #from matplotlib.pyplot import imshow, show
 from matplotlib import pyplot as plt
-
+import cv2
+import numpy as np
 
 
 def plot(images):
@@ -16,8 +17,11 @@ def plot(images):
 	#	ax1 = fig.add_subplot(total,1,i+1)
 	#	ax1.plot(images[i])
 	for i in range(total):
-		print(images[i].shape)
+		print(images[i].shape, "IMG DIM", np.max(images[i]), np.min(images[i]))
 		axes[i].imshow(images[i])
+		#cv2.imshow('img',images[i])
+		#cv2.waitKey(0)
+
 
 		#plt.imshow(images[i])
 	plt.show()
