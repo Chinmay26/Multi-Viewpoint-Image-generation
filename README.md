@@ -46,7 +46,7 @@ We normalize all input images to [-1,1] and use LeakyRelu for non-linearity in i
 
 
 2. Pose Encoder:
-The vanilla AE model has no explicit understanding of the target viewpoint. The next step is incorporate pose information into our model. We represented pose as a 36D one-hot vector corresponding to azimuth angles from [0-350]. The pose is broadcasted as a cube and then concatenated with the latent space. The pose signal considerably improves the quality of the synthetic views.
+   -  The vanilla AE model has no explicit understanding of the target viewpoint. The next step is incorporate pose information into our model. We represented pose as a 36D one-hot vector corresponding to azimuth angles from [0-350]. The pose is broadcasted as a cube and then concatenated with the latent space. The pose signal considerably improves the quality of the synthetic views.
 
 
 
@@ -70,10 +70,10 @@ Architecture
 Image 2: Deep Autoencoder with Pose Architecture
 
 
-Results
+![Encoder Results](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_ae_with_pose.png?raw=true)
+                               Encoder Results: Fig 3
 
-                        Fig 2
-Result Interpretation: The pose encoder performs considerably better than the vanilla AE. The results from Fig 2 show some results from random input-output pair combinations. It preserves the structural property of the input object. It performs best when there is small transformation change [< 180 deg] . This is expected since the Pose Encoder has to guess the pixels for the occluded regions. For large transformations, there is larger occluded area between the input view and target view. This explains the larger L1 test loss [~0.09] for test models with larger view-point transformation.
+   -  Result Interpretation: The pose encoder performs considerably better than the vanilla AE. The results from Fig 2 show some results from random input-output pair combinations. It preserves the structural property of the input object. It performs best when there is small transformation change [< 180 deg] . This is expected since the Pose Encoder has to guess the pixels for the occluded regions. For large transformations, there is larger occluded area between the input view and target view. This explains the larger L1 test loss [~0.09] for test models with larger view-point transformation.
 
 Experimental Findings
 Architecture: We experimented with different deep architectures and 3-4 intermediate layers, different filter dimensions. Our experiments revealed that L1 loss does not show any improvement when architecture was beyond 3  intermediate layers. Adding final FC layers degraded the performance of the model.
@@ -93,8 +93,8 @@ Image 3: Architecture of Generator
 Image 3: Architecture of Discriminator
 
         
-
-                    Fig 3
+![Encoder Results](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_gan.png?raw=true)
+                          Fig 3
 
 Results:
 From Fig 3, we can see that we are able to generate better quality images in comparison to . In model 3, even when there is a large viewpoint change [180 deg], we are able to generate good quality images. With more training, we can generate highly detailed images.
