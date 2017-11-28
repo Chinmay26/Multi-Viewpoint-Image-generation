@@ -16,8 +16,8 @@ We tackle the above in three phases
 
 
 ### Dataset:
-- [ShapeNet dataset] (https://shapenet.org/). We focused on three model categories: Car, Chair and Mug.
-- We rendered [2D images] (https://drive.google.com/drive/folders/0Byb88ed56z69LWVJWWRIRVQ0Rkk?usp=sharing) of the above 3D models using [ShapeNet Renderer] (https://github.com/ShapeNet/shapenet-viewer). Both input and output images are of resolution 64*64*3.
+- [ShapeNet dataset](https://shapenet.org/). We focused on three model categories: Car, Chair and Mug.
+- We rendered [2D images](https://drive.google.com/drive/folders/0Byb88ed56z69LWVJWWRIRVQ0Rkk?usp=sharing) of the above 3D models using [ShapeNet Renderer](https://github.com/ShapeNet/shapenet-viewer). Both input and output images are of resolution 64*64*3.
 For each model, we render images from 36 viewpoints corresponding to 36 azimuth angles and  0 elevation angle. 
 - We use a 80:20 training/test split. For Car category, from total 3512 models, we use 2809 models [98315 images ] and the remaining 703 [24605 images] for testing. 
 - For Chair category,  from total 6775 models, we use 5402 models [189700 images] and the remaining 1355 models [ 47425 images ] for testing. We used the Mug category for prototyping.
@@ -35,7 +35,7 @@ Autoencoders have been known to perform well in capturing abstract information o
 Therefore, we designed a baseline Autoencoder to generate 2D image in a different pose as that of given input image
 
 
-Image 1: Final baseline model architecture
+Imag![alt text](http://url/to/img.png)
 
 
 
