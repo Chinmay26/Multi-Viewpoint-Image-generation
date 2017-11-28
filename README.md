@@ -30,20 +30,19 @@ We normalize all input images to [-1,1] and use LeakyRelu for non-linearity in i
 
 ## Models
 1. Autoencoder
-   a. Architecture
-Autoencoders have been known to perform well in capturing abstract information of image contents and can recover the original image by upsampling the feature maps
-Therefore, we designed a baseline Autoencoder to generate 2D image in a different pose as that of given input image
+   -  Architecture
+   Autoencoders have been known to perform well in capturing abstract information of image contents and can recover the original image by upsampling the feature maps. Therefore, we designed a baseline Autoencoder to generate 2D image in a different pose as that of given input image
 
 
 ![Encoder Results: Fig 1](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_ae_wo_pose.png?raw=true)
-   b. Results
-     - Results Interpretation: Fig 1 shows the results of the Vanilla AE.  From Fig 1, for car models 1 and 4, the input and target views are close. Thus, AE works well since there is not large viewpoint transformation change. Model 6 gives us a deformed result since the input image has its front view hidden.
-     - The above baseline model when trained on mug dataset, was unable to produce an accurate output in target viewpoint. For example, when we tested it on mug dataset, it couldn’t reproduce mug handle in target viewpoint. This is due to that baseline model failed to learn the pose information.
-   c. Experimental findings
-      - Pooling: Max pooling reduces the number of dimensions of input to reduce computation costs, but in our case, the model couldn’t learn abstract features of image because of max pooling. We decided to remove max pooling from above model and replaced tanh functions by ReLU function except the last deconvolutional layer.
-      - Activation Function: ReLU function is useful as it prevents gradients from saturating. However, ReLU suffers from a problem wherein ReLU units die during training and if that happens, gradient through that point will be zero forever. To resolve this issue, we replaced ReLU by Leaky ReLU
-   d. Improvement area:
-      - The vanilla AE cannot generate synthetic views in any given target viewpoint. Encoding pose information to model explicitly will help in generating synthetic views in target viewpoint
+   -  Results
+      -  Results Interpretation: Fig 1 shows the results of the Vanilla AE.  From Fig 1, for car models 1 and 4, the input and target views are close. Thus, AE works well since there is not large viewpoint transformation change. Model 6 gives us a deformed result since the input image has its front view hidden.
+      -  The above baseline model when trained on mug dataset, was unable to produce an accurate output in target viewpoint. For example, when we tested it on mug dataset, it couldn’t reproduce mug handle in target viewpoint. This is due to that baseline model failed to learn the pose information.
+   -  Experimental findings
+      -  Pooling: Max pooling reduces the number of dimensions of input to reduce computation costs, but in our case, the model couldn’t learn abstract features of image because of max pooling. We decided to remove max pooling from above model and replaced tanh functions by ReLU function except the last deconvolutional layer.
+      -  Activation Function: ReLU function is useful as it prevents gradients from saturating. However, ReLU suffers from a problem wherein ReLU units die during training and if that happens, gradient through that point will be zero forever. To resolve this issue, we replaced ReLU by Leaky ReLU
+   -  Improvement area:
+      -  The vanilla AE cannot generate synthetic views in any given target viewpoint. Encoding pose information to model explicitly will help in generating synthetic views in target viewpoint
 
 
 2. Pose Encoder:
