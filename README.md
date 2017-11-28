@@ -75,16 +75,17 @@ Image 2: Deep Autoencoder with Pose Architecture
 
    -  Result Interpretation: The pose encoder performs considerably better than the vanilla AE. The results from Fig 2 show some results from random input-output pair combinations. It preserves the structural property of the input object. It performs best when there is small transformation change [< 180 deg] . This is expected since the Pose Encoder has to guess the pixels for the occluded regions. For large transformations, there is larger occluded area between the input view and target view. This explains the larger L1 test loss [~0.09] for test models with larger view-point transformation.
 
-Experimental Findings
+   -  Experimental Findings
 Architecture: We experimented with different deep architectures and 3-4 intermediate layers, different filter dimensions. Our experiments revealed that L1 loss does not show any improvement when architecture was beyond 3  intermediate layers. Adding final FC layers degraded the performance of the model.
-Pose Signal: This was a challenging part since we can embed pose in different ways: one-hot vector, cube, amplified vector etc. We experimented with the above and got best general results across categories for the above representation. There is also a need to balance the pose signal with the image signal. The pose signal should not overshadow the image content in the latent space. As such, we used a 4 * 4 * 36 cube for pose signal representation and 4*4*92 for the image content.
+
+   -  Pose Signal: This was a challenging part since we can embed pose in different ways: one-hot vector, cube, amplified vector etc. We experimented with the above and got best general results across categories for the above representation. There is also a need to balance the pose signal with the image signal. The pose signal should not overshadow the image content in the latent space. As such, we used a 4 * 4 * 36 cube for pose signal representation and 4*4*92 for the image content.
 Hyperparameters: Adding Batch Norm between intermediate layers helped to converge faster. Tweaking learning rates did not help to a larger extent.
-Improvement Areas
+   -  Improvement Areas
 The state-of-the art models use a flow field or a visibility map to aid image generation. This helps to separate out the regions where pixels need to be relocated with pixels which need to be predicted. Adding such a representation to the model may help to further improve the quality of the images.
 
-Pose Encoder with Adversarial Training:
+3. Pose Encoder with Adversarial Training:
 GAN models have been used to generate realistic high quality images. The Pose Encoder preserves image structure but is unable to generate rich textures and high quality images. We combined them to have a joint loss function and train the model in an adversarial fashion.
-Architecture
+   -  Architecture
 Combined Loss:  Alpha * L1 loss + Beta * GAN loss
 We used adversarial training and jointly trained the model. Alpha = 1.0 and Beta = 0.2 gave best results. Here, we were more focused on the quality of the output images rather than the combined  loss values.
 
