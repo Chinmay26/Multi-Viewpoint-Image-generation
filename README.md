@@ -36,9 +36,15 @@ We normalize all input images to [-1,1] and use LeakyRelu for non-linearity in i
    
    ![AE Arch](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/vanilla_ae.png?raw=true)
    
-   -  Encoder Results
+                                                   Encoder Architecture
 ![Encoder Results: Fig 1](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_ae_wo_pose.png?raw=true)
+
+                                                   Encoder Results: Fig 1 
+                                                   
 ![AE Loss](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_ae_without_pose_.PNG?raw=true)
+
+                                                   Encoder L1 Loss Curves
+
    -  Encoder Results
       -  Results Interpretation: Fig 1 shows the results of the Vanilla AE.  From Fig 1, for car models 1 and 4, the input and target views are close. Thus, AE works well since there is not large viewpoint transformation change. Model 6 gives us a deformed result since the input image has its front view hidden.
       -  The above baseline model when trained on mug dataset, was unable to produce an accurate output in target viewpoint. For example, when we tested it on mug dataset, it couldn’t reproduce mug handle in target viewpoint. This is due to that baseline model failed to learn the pose information.
@@ -59,9 +65,13 @@ We normalize all input images to [-1,1] and use LeakyRelu for non-linearity in i
 
    -  Pose Encoder Results
 ![Encoder Results](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_ae_with_pose.png?raw=true)
+                                            
+                                            Encoder Results: Fig 2
+                                            
+
 ![AE Loss](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_ae_with_pose_.PNG?raw=true)
 
-                               Encoder Results: Fig 3
+                                             PoseEncoder L1 Loss
 
    -  Result Interpretation: The pose encoder performs considerably better than the vanilla AE. The results from Fig 2 show some results from random input-output pair combinations. It preserves the structural property of the input object. It performs best when there is small transformation change [< 180 deg] . This is expected since the Pose Encoder has to guess the pixels for the occluded regions. For large transformations, there is larger occluded area between the input view and target view. This explains the larger L1 test loss [~0.09] for test models with larger view-point transformation.
 
@@ -95,19 +105,19 @@ We used adversarial training and jointly trained the model. Alpha = 1.0 and Beta
 
                                                       Discriminator Loss
 
-Results:
+   -  Results:
 From Fig 3, we can see that we are able to generate better quality images in comparison to . In model 3, even when there is a large viewpoint change [180 deg], we are able to generate good quality images. With more training, we can generate highly detailed images.
 
-Experiments:  Training difficulties and tricks used to balance the min-max game
-GANs are volatile and highly unstable during training. In our case, the discriminator was very strong and the discriminator loss [especially dreal_loss] dropped to 0 after few epochs. We had to balance out the power and we used the following tricks:
+   -  Experiments:  Training difficulties and tricks used to balance the min-max game
+   GANs are volatile and highly unstable during training. In our case, the discriminator was very strong and the discriminator loss [especially dreal_loss] dropped to 0 after few epochs. We had to balance out the power and we used the following tricks:
 Feature Matching: Instead of Generator minimizing the output of D, we trained G to maximize the L2 loss of an intermediate activation layer of D.
-Make Generator stronger: Generator is update more frequently [5 vs 1] than the discriminator. Higher learning rate [5e-4 vs 5e-5] applied to Generator than Discriminator.
+      -  Make Generator stronger: Generator is update more frequently [5 vs 1] than the discriminator. Higher learning rate [5e-4 vs 5e-5] applied to Generator than Discriminator.
 Make Discriminator weaker: Remove batch norm from discriminator. Add higher dropout rate [0.5] to slow down convergence of discriminator.
-Monitor via Loss statistics: Stop training the discriminator if its loss falls below the a threshold. [dreal_loss < 0.2 , dfake_loss < 0.2]
-Using Soft and Noisy Labels: Add some perturbation to label values. Replace Real = 1 to Real = [0.8, 1.2]. We only did it for Real labels since only dreal_loss was dropping to 0 in few epochs.
-Improvements
- The discriminator is currently rudimentary. It only has to distinguish between fake and real samples. We can extend the difficulty of the discriminator by enforcing the discriminator to distinguish between correct vs incorrect poses + correct vs incorrect image labels. 
-Train for longer hours. GANs have proven to improve image quality when trained for several days. Due to time constraint, we only ran it for ~2 hours.
+      -  Monitor via Loss statistics: Stop training the discriminator if its loss falls below the a threshold. [dreal_loss < 0.2 , dfake_loss < 0.2]
+      -  Using Soft and Noisy Labels: Add some perturbation to label values. Replace Real = 1 to Real = [0.8, 1.2]. We only did it for Real labels since only dreal_loss was dropping to 0 in few epochs.
+   -  Improvements
+      -  The discriminator is currently rudimentary. It only has to distinguish between fake and real samples. We can extend the difficulty of the discriminator by enforcing the discriminator to distinguish between correct vs incorrect poses + correct vs incorrect image labels. 
+      -  Train for longer hours. GANs have proven to improve image quality when trained for several days. Due to time constraint, we only ran it for ~2 hours.
 
 #### Future Work: 
 1. Extend the difficulty of the discriminator: Enforce it to distinguish correct vs incorrect poses + correct vs incorrect models.
