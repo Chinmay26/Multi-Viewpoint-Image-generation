@@ -28,9 +28,9 @@ We optimise on the L1 loss function to improve the synthetic image detail and qu
 ### Normalization and Non-linearity:
 We normalize all input images to [-1,1] and use LeakyRelu for non-linearity in intermediate layers and Tanh for the final layer. We experimented with other combinations (Sigmoid / ReLU) but got best results for above combination
 
-Models
-Autoencoder
-Architecture
+## Models
+1. Autoencoder
+   a. Architecture
 Autoencoders have been known to perform well in capturing abstract information of image contents and can recover the original image by upsampling the feature maps
 Therefore, we designed a baseline Autoencoder to generate 2D image in a different pose as that of given input image
 
@@ -39,7 +39,7 @@ Image 1: Final baseline model architecture
 
 
 
-b. Results
+   b. Results
 
 
                       Fig 1
@@ -124,23 +124,14 @@ Train for longer hours. GANs have proven to improve image quality when trained f
 
 #### Major Challenges encountered: 
 1. Pose Encoding: How can we encode the pose information to the model? Which representation helps in image generation?
-GAN training: GANs are highly volatile. It took considerable research and hand-tuning to ensure the min-max game between the generator and discriminator. Thanks to several online resources, we were able to prevent the discriminator from dropping to failure mode [loss = 0]. 
-2. Memory handling: We were dealing with image datasets of worth >3GB. Due to a bug in our code which resulted in float64 conversion, we ended up 3GB * 8 * 3 ~ 70 GB. This bloated memory caused us a minor setback initially during training.
+2. GAN training: GANs are highly volatile. It took considerable research and hand-tuning to ensure the min-max game between the generator and discriminator. Thanks to several online resources, we were able to prevent the discriminator from dropping to failure mode [loss = 0]. 
+3. Memory handling: We were dealing with image datasets of worth >3GB. Due to a bug in our code which resulted in float64 conversion, we ended up 3GB * 8 * 3 ~ 70 GB. This bloated memory caused us a minor setback initially during training.
 
 How to run?
-This project is built on Python 3.5 and Tensorflow 1.3. 
-Before running the notebooks, please install dependencies from requirements.txt in your system
-Make sure that you have python 3.5 installed in your system
-How to setup a virtual environment (Recommended)
-cd <Project directory>
-sudo pip install virtualenv (If you didn't install it)
-virtualenv -p python3 /your/path/to/the/virtual/env 
-source  /your/path/to/the/virtual/env/bin/activate
-pip install -r requirements.txt  (Install dependencies)
-You can install TensorFlow from here
-Run the Project
-deactivate (to exit the virtual environment)
-Results:
+- This project is built on Python 3.5 and Tensorflow 1.3. 
+- Before running the notebooks, please install dependencies from requirements.txt in your system
+- Make sure that you have python 3.5 installed in your system
+
  
 References:
 1. http://openaccess.thecvf.com/content_cvpr_2017/papers/Park_Transformation-Grounded_Image_Generation_CVPR_2017_paper.pdf
