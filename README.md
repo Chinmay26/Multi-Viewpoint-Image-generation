@@ -15,17 +15,17 @@ We tackle the above in three phases
 - In phase 3, we investigate different adversarial training models (Vanilla GAN, DCGAN) to generate realistic synthetic views, given any viewpoint. 
 
 
-## Dataset:
+## Dataset
 - [ShapeNet dataset](https://shapenet.org/). We focused on three model categories: Car, Chair and Mug.
-- We rendered [2D images](https://drive.google.com/drive/folders/0Byb88ed56z69LWVJWWRIRVQ0Rkk?usp=sharing) of the above 3D models using [ShapeNet Renderer](https://github.com/ShapeNet/shapenet-viewer). Both input and output images are of resolution 64*64*3.
+- We rendered [2D images](https://drive.google.com/drive/folders/0Byb88ed56z69LWVJWWRIRVQ0Rkk?usp=sharing) of the above 3D models using [ShapeNet Renderer](https://github.com/ShapeNet/shapenet-viewer). Both input and output images are of resolution 64 by 64 by 3.
 For each model, we render images from 36 viewpoints corresponding to 36 azimuth angles and  0 elevation angle. 
 - We use a 80:20 training/test split. For Car category, from total 3512 models, we use 2809 models [98315 images ] and the remaining 703 [24605 images] for testing. 
 - For Chair category,  from total 6775 models, we use 5402 models [189700 images] and the remaining 1355 models [ 47425 images ] for testing. We used the Mug category for prototyping.
 
-## Loss:
+## Loss
 We optimise on the L1 loss function to improve the synthetic image detail and quality . We experimented with different loss functions such as Local Moment Loss, L2 loss, perceptual loss (pre-trained deep networks), but got best results with L1 loss.
 
-## Normalization and Non-linearity:
+## Normalization and Non-linearity
 We normalize all input images to [-1,1] and use LeakyRelu for non-linearity in intermediate layers and Tanh for the final layer. We experimented with other combinations (Sigmoid / ReLU) but got best results for above combination
 
 ## Models
@@ -73,12 +73,12 @@ We normalize all input images to [-1,1] and use LeakyRelu for non-linearity in i
 
                                              PoseEncoder L1 Loss
 
-   -  Result Interpretation: The pose encoder performs considerably better than the vanilla AE. The results from Fig 2 show some results from random input-output pair combinations. It preserves the structural property of the input object. It performs best when there is small transformation change [< 180 deg] . This is expected since the Pose Encoder has to guess the pixels for the occluded regions. For large transformations, there is larger occluded area between the input view and target view. This explains the larger L1 test loss [~0.09] for test models with larger view-point transformation.
+   -  Result Interpretation: The pose encoder performs considerably better than the vanilla AE. The results from Fig 2 show some results from random input-output pair combinations. It preserves the structural property of the input object. It performs best when there is small transformation change [< 180 deg] . This is expected since the Pose Encoder has to **perdict** the pixels for the occluded regions. For large transformations, there is larger occluded area between the input view and target view. This explains the larger L1 test loss [~0.09] for test models with larger view-point transformation.
 
    -  Experimental Findings
       - Architecture: We experimented with different deep architectures and 3-4 intermediate layers, different filter dimensions. Our experiments revealed that L1 loss does not show any improvement when architecture was beyond 3  intermediate layers. Adding final FC layers degraded the performance of the model.
 
-      -  Pose Signal: This was a challenging part since we can embed pose in different ways: one-hot vector, cube, amplified vector etc. We experimented with the above and got best general results across categories for the above representation. There is also a need to balance the pose signal with the image signal. The pose signal should not overshadow the image content in the latent space. As such, we used a 4 * 4 * 36 cube for pose signal representation and 4*4*92 for the image content.
+      -  Pose Signal: This was a **challenging part** since we can embed pose in different ways: one-hot vector, cube, amplified vector etc. We experimented with the above and got best general results across categories for the above representation. There is also a need to balance the pose signal with the image signal. The pose signal should not overshadow the image content in the latent space. As such, we used a 4 * 4 * 36 cube for pose signal representation and 4*4*92 for the image content.
 Hyperparameters: Adding Batch Norm between intermediate layers helped to converge faster. Tweaking learning rates did not help to a larger extent.
       -  Improvement Areas
 The state-of-the art models use a flow field or a visibility map to aid image generation. This helps to separate out the regions where pixels need to be relocated with pixels which need to be predicted. Adding such a representation to the model may help to further improve the quality of the images.
@@ -113,12 +113,12 @@ GAN models have been used to generate realistic high quality images. The Pose En
    -  Results:
 From Fig 3, we can see that we are able to generate better quality images in comparison to . In model 3, even when there is a large viewpoint change [180 deg], we are able to generate good quality images. With more training, we can generate highly detailed images.
 
-   -  Experiments:  Training difficulties and tricks used to balance the min-max game
-   GANs are volatile and highly unstable during training. In our case, the discriminator was very strong and the discriminator loss [especially dreal_loss] dropped to 0 after few epochs. We had to balance out the power and we used the following tricks:
-Feature Matching: Instead of Generator minimizing the output of D, we trained G to maximize the L2 loss of an intermediate activation layer of D.
-      -  Make Generator stronger: Generator is update more frequently [5 vs 1] than the discriminator. Higher learning rate [5e-4 vs 5e-5] applied to Generator than Discriminator.
+   -  Experiments:  **Training difficulties and tricks used to balance the min-max game**
+   GANs are volatile and **highly unstable** during training. In our case, the discriminator was very strong and the discriminator loss [especially **dreal_loss**] dropped to 0 after few epochs. We had to balance out the power and we used the following tricks:
+   -  Feature Matching: Instead of Generator minimizing the output of D, we trained G to maximize the L2 loss of an intermediate activation layer of D.
+   -  Make Generator stronger: Generator is update more frequently [5 vs 1] than the discriminator. Higher learning rate [5e-4 vs 5e-5] applied to Generator than Discriminator.
 Make Discriminator weaker: Remove batch norm from discriminator. Add higher dropout rate [0.5] to slow down convergence of discriminator.
-      -  Monitor via Loss statistics: Stop training the discriminator if its loss falls below the a threshold. [dreal_loss < 0.2 , dfake_loss < 0.2]
+   -  Monitor via Loss statistics: Stop training the discriminator if its loss falls below the a threshold. [dreal_loss < 0.2 , dfake_loss < 0.2]
       -  Using Soft and Noisy Labels: Add some perturbation to label values. Replace Real = 1 to Real = [0.8, 1.2]. We only did it for Real labels since only dreal_loss was dropping to 0 in few epochs.
    -  Improvements
       -  The discriminator is currently rudimentary. It only has to distinguish between fake and real samples. We can extend the difficulty of the discriminator by enforcing the discriminator to distinguish between correct vs incorrect poses + correct vs incorrect image labels. 
