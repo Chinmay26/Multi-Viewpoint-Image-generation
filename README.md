@@ -83,15 +83,20 @@ Hyperparameters: Adding Batch Norm between intermediate layers helped to converg
       -  Improvement Areas
 The state-of-the art models use a flow field or a visibility map to aid image generation. This helps to separate out the regions where pixels need to be relocated with pixels which need to be predicted. Adding such a representation to the model may help to further improve the quality of the images.
 
-3. Pose Encoder with Adversarial Training:
-GAN models have been used to generate realistic high quality images. The Pose Encoder preserves image structure but is unable to generate rich textures and high quality images. We combined them to have a joint loss function and train the model in an adversarial fashion.
+  3. **Pose Encoder with Adversarial Training**
+GAN models have been used to generate realistic high quality images. The Pose Encoder preserves image structure but is unable to generate rich textures and high quality images. We combined them to have a joint loss function and train the model in an adversarial fashion. We use DCGAN architecture for reference.
    -  Architecture
-Combined Loss:  Alpha * L1 loss + Beta * GAN loss
-We used adversarial training and jointly trained the model. Alpha = 1.0 and Beta = 0.2 gave best results. Here, we were more focused on the quality of the output images rather than the combined  loss values.
-   -  Pose Encoder Results
-![Encoder Results](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_ae_with_pose.png?raw=true)
+         ![Generator](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/generator.png?raw=true)
+         
+                                                  Generator  
+         ![Discriminator](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/discriminator.png?raw=true)
+         
+                                                  Discriminator
+   
+         * Combined Loss:  Alpha * L1 loss + Beta * GAN loss *
+         We used adversarial training and jointly trained the model. Alpha = 1.0 and Beta = 0.2 gave best results. Here, we were more focused on the quality of the output images rather than the combined  loss values.
 
-
+                                                      
         
 ![Gan Results](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_gan.png?raw=true)
 
@@ -99,7 +104,7 @@ We used adversarial training and jointly trained the model. Alpha = 1.0 and Beta
 
 ![GAN Discriminator Loss](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_gan_dis_loss.PNG?raw=true)
 
-                                                      Generator Loss
+                                                      Combined Generator Loss
 
 ![GAN Generator Loss](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_gan_gen_loss.PNG?raw=true)
 
