@@ -31,11 +31,15 @@ We normalize all input images to [-1,1] and use LeakyRelu for non-linearity in i
 ## Models
 1. Autoencoder
    -  Architecture
+   
    Autoencoders have been known to perform well in capturing abstract information of image contents and can recover the original image by upsampling the feature maps. Therefore, we designed a baseline Autoencoder to generate 2D image in a different pose as that of given input image
-
-
+   
+   ![AE Arch](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/vanilla_ae.png?raw=true)
+   
+   -  Encoder Results
 ![Encoder Results: Fig 1](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_ae_wo_pose.png?raw=true)
-   -  Results
+![AE Loss](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_ae_without_pose_.PNG?raw=true)
+   -  Encoder Results
       -  Results Interpretation: Fig 1 shows the results of the Vanilla AE.  From Fig 1, for car models 1 and 4, the input and target views are close. Thus, AE works well since there is not large viewpoint transformation change. Model 6 gives us a deformed result since the input image has its front view hidden.
       -  The above baseline model when trained on mug dataset, was unable to produce an accurate output in target viewpoint. For example, when we tested it on mug dataset, it couldn’t reproduce mug handle in target viewpoint. This is due to that baseline model failed to learn the pose information.
    -  Experimental findings
@@ -48,29 +52,15 @@ We normalize all input images to [-1,1] and use LeakyRelu for non-linearity in i
 2. Pose Encoder:
    -  The vanilla AE model has no explicit understanding of the target viewpoint. The next step is incorporate pose information into our model. We represented pose as a 36D one-hot vector corresponding to azimuth angles from [0-350]. The pose is broadcasted as a cube and then concatenated with the latent space. The pose signal considerably improves the quality of the synthetic views.
 
+   -  Architecture
+![AE Arch](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/pose_encoder.png?raw=true)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-Architecture
-
-
-Image 2: Deep Autoencoder with Pose Architecture
-
-
+   -  Pose Encoder Results
 ![Encoder Results](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_ae_with_pose.png?raw=true)
+![AE Loss](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_ae_with_pose_.PNG?raw=true)
+
                                Encoder Results: Fig 3
 
    -  Result Interpretation: The pose encoder performs considerably better than the vanilla AE. The results from Fig 2 show some results from random input-output pair combinations. It preserves the structural property of the input object. It performs best when there is small transformation change [< 180 deg] . This is expected since the Pose Encoder has to guess the pixels for the occluded regions. For large transformations, there is larger occluded area between the input view and target view. This explains the larger L1 test loss [~0.09] for test models with larger view-point transformation.
@@ -88,14 +78,22 @@ GAN models have been used to generate realistic high quality images. The Pose En
    -  Architecture
 Combined Loss:  Alpha * L1 loss + Beta * GAN loss
 We used adversarial training and jointly trained the model. Alpha = 1.0 and Beta = 0.2 gave best results. Here, we were more focused on the quality of the output images rather than the combined  loss values.
+   -  Pose Encoder Results
+![Encoder Results](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_ae_with_pose.png?raw=true)
 
-Image 3: Architecture of Generator
-
-Image 3: Architecture of Discriminator
 
         
-![Encoder Results](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_gan.png?raw=true)
-                          Fig 3
+![Gan Results](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_gan.png?raw=true)
+
+                                                            Fig 3
+
+![GAN Discriminator Loss](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_gan_dis_loss.PNG?raw=true)
+
+                                                      Generator Loss
+
+![GAN Generator Loss](https://github.com/Chinmay26/Multi-Viewpoint-Image-generation/blob/master/images/car_gan_gen_loss.PNG?raw=true)
+
+                                                      Discriminator Loss
 
 Results:
 From Fig 3, we can see that we are able to generate better quality images in comparison to . In model 3, even when there is a large viewpoint change [180 deg], we are able to generate good quality images. With more training, we can generate highly detailed images.
