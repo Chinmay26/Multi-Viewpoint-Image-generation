@@ -124,6 +124,16 @@ Make Discriminator weaker: Remove batch norm from discriminator. Add higher drop
       -  The discriminator is currently rudimentary. It only has to distinguish between fake and real samples. We can extend the difficulty of the discriminator by enforcing the discriminator to distinguish between correct vs incorrect poses + correct vs incorrect image labels. 
       -  Train for longer hours. GANs have proven to improve image quality when trained for several days. Due to time constraint, we only ran it for ~2 hours.
 
+## Comparison to state-of-art techniques
+
+There has been previous works done in view-synthesis notably [Flow-field networks](https://arxiv.org/abs/1605.03557) and [Transformation Grounded Networks](http://openaccess.thecvf.com/content_cvpr_2017/papers/Park_Transformation-Grounded_Image_Generation_CVPR_2017_paper.pdf). We compare our model with these state-of the art models.
+
+|          Single-view                   |    L1 loss    |        Input Image      |
+| -------------------------------------- |:-------------:| ------------------------|
+| Flow Field Networks                    |  0.368        |    224 * 224 * 3        |
+| Transformation Grounded Networks       |  0.132        |    256 * 256 * 3        |
+| Ours                                   | 0.0514        |     64  * 64  * 3       |
+
 ## Future Work: 
 1. Extend the difficulty of the discriminator: Enforce it to distinguish correct vs incorrect poses + correct vs incorrect models.
 2. Experiment with real world objects and scenes. Other datasets such as KiTTI.
