@@ -1,5 +1,5 @@
 # Multi-Viewpoint-Image-generation
-We investigate three deep convolutional architectures to generate multiple views from a given single view of an object in an arbitrary pose. Traditional CV techniques can handle affine transformations such as rotation, translation, scaling well. However, generating non-affine transformations like view-point change, projective transformations from single 2D images is a challenging task. The challenges may be due to unspecified viewing angle,  partial object occlusion, 3D object shape ambiguity, pose ambiguity.
+This project investigates three deep convolutional architectures to generate multiple views from a given single view of an object in an arbitrary pose. Traditional CV techniques can handle affine transformations such as rotation, translation, scaling well. However, generating non-affine transformations like view-point change, projective transformations from single 2D images is a challenging task. The challenges may be due to unspecified viewing angle,  partial object occlusion, 3D object shape ambiguity, pose ambiguity.
 
 Image generation and transformations tasks have many practical applications in robotics and computer visions. Rendering multiple 2D views is helpful in generating 3D representation of that object.  In robotics, generating multiple views can help in better grasping of objects by giving them a better understanding of hidden parts of object. It can also be used as a pre-processing step in vision algorithms such as Image classification/labeling, face verification to check for duplicate viewpoint images.
 
@@ -9,24 +9,24 @@ Generate synthetic 2D images of an object in a target viewpoint from a single in
 
 
 ### Introduction:
-We tackle the above in three phases
-- In phase 1 of the project, we worked towards generating image in target viewpoint which was implicit to the model [target viewpoint is always 30 deg counterclockwise].
-- In phase 2, we generated synthetic 2D images given any target viewpoint [azimuth angle].
-- In phase 3, we investigate different adversarial training models (Vanilla GAN, DCGAN) to generate realistic synthetic views, given any viewpoint. 
+The problem is approached in three phases
+- Phase 1 tackles generating image in target viewpoint which was implicit to the model [target viewpoint is always 30 deg counterclockwise].
+- Phase 2 tackles generating synthetic 2D images given any target viewpoint [azimuth angle].
+- Phase 3 investigates different adversarial training models (Vanilla GAN, DCGAN) to generate realistic synthetic views, given any viewpoint. 
 
 
 ## Dataset
-- [ShapeNet dataset](https://shapenet.org/). We focused on three model categories: Car, Chair and Mug.
-- We rendered [2D images](https://drive.google.com/drive/folders/0Byb88ed56z69LWVJWWRIRVQ0Rkk?usp=sharing) of the above 3D models using [ShapeNet Renderer](https://github.com/ShapeNet/shapenet-viewer). Both input and output images are of resolution 64 by 64 by 3.
-For each model, we render images from 36 viewpoints corresponding to 36 azimuth angles and  0 elevation angle. 
-- We use a 80:20 training/test split. For Car category, from total 3512 models, we use 2809 models [98315 images ] and the remaining 703 [24605 images] for testing. 
+- [ShapeNet dataset](https://shapenet.org/). The focus is on three model categories: Car, Chair and Mug.
+- The [2D images](https://drive.google.com/drive/folders/0Byb88ed56z69LWVJWWRIRVQ0Rkk?usp=sharing) of the above 3D models are rendered using [ShapeNet Renderer](https://github.com/ShapeNet/shapenet-viewer). Both input and output images are of resolution 64 by 64 by 3.
+For each model, images are rendered from 36 viewpoints corresponding to 36 azimuth angles and 0 elevation angle. 
+- 80:20 training/test split is used. For Car category, the total 3512 models is plit into 2809 models [98315 images ] for training and the remaining 703 models [24605 images] for testing. 
 - For Chair category,  from total 6775 models, we use 5402 models [189700 images] and the remaining 1355 models [ 47425 images ] for testing. We used the Mug category for prototyping.
 
 ## Loss
 We optimise on the L1 loss function to improve the synthetic image detail and quality . We experimented with different loss functions such as Local Moment Loss, L2 loss, perceptual loss (pre-trained deep networks), but got best results with L1 loss.
 
 ## Normalization and Non-linearity
-We normalize all input images to [-1,1] and use LeakyRelu for non-linearity in intermediate layers and Tanh for the final layer. We experimented with other combinations (Sigmoid / ReLU) but got best results for above combination
+All input images are nomralized to [-1,1] and LeakyRelu is used for non-linearity in intermediate layers and Tanh for the final layer. We experimented with other combinations (Sigmoid / ReLU) but got best results for above combination
 
 ## Models
 1. **Autoencoder**
@@ -47,10 +47,10 @@ We normalize all input images to [-1,1] and use LeakyRelu for non-linearity in i
 
    -  Encoder Results
       -  Results Interpretation: Fig 1 shows the results of the Vanilla AE.  From Fig 1, for car models 1 and 4, the input and target views are close. Thus, AE works well since there is not large viewpoint transformation change. Model 6 gives us a deformed result since the input image has its front view hidden.
-      -  The above baseline model when trained on mug dataset, was unable to produce an accurate output in target viewpoint. For example, when we tested it on mug dataset, it couldn’t reproduce mug handle in target viewpoint. This is due to that baseline model failed to learn the pose information.
+      -  The above baseline model when trained on mug dataset, was unable to produce an accurate output in target viewpoint. For example, when testing it on mug dataset, it couldn’t reproduce mug handle in target viewpoint. This is due to that baseline model failed to learn the pose information.
    -  Experimental findings
       -  Pooling: Max pooling reduces the number of dimensions of input to reduce computation costs, but in our case, the model couldn’t learn abstract features of image because of max pooling. We decided to remove max pooling from above model and replaced tanh functions by ReLU function except the last deconvolutional layer.
-      -  Activation Function: ReLU function is useful as it prevents gradients from saturating. However, ReLU suffers from a problem wherein ReLU units die during training and if that happens, gradient through that point will be zero forever. To resolve this issue, we replaced ReLU by Leaky ReLU
+      -  Activation Function: ReLU function is useful as it prevents gradients from saturating. However, ReLU suffers from a problem wherein ReLU units die during training and if that happens, gradient through that point will be zero forever. To resolve this issue, ReLU was replaced by Leaky ReLU
    -  Improvement area:
       -  The vanilla AE cannot generate synthetic views in any given target viewpoint. Encoding pose information to model explicitly will help in generating synthetic views in target viewpoint
 
